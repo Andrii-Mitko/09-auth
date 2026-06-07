@@ -1,4 +1,3 @@
-import AuthNavigation from "../AuthNavigation/AuthNavigation";
 import css from "./Header.module.css";
 import Link from "next/link";
 
@@ -20,7 +19,16 @@ const Header = () => {
               Notes
             </Link>
           </li>
-          <AuthNavigation />
+          <li className={css.navigationItem}>
+            <Link className={css.navigationLink} href="/sign-in">
+              Login
+            </Link>
+          </li>
+          <li className={css.navigationItem}>
+            <Link className={css.navigationLink} href="/sign-up">
+              Register
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>

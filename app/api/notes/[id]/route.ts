@@ -1,17 +1,18 @@
-import { NextResponse } from 'next/server';
-import { api } from '../../api';
-import { cookies } from 'next/headers';
-import { logErrorResponse } from '../../_utils/utils';
-import { isAxiosError } from 'axios';
+import { NextRequest, NextResponse } from "next/server";
+import { api, ApiError } from "../../api";
+import { cookies } from "next/headers";
+import { logErrorResponse } from "../../_utils/utils";
+import { isAxiosError } from "axios";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-export async function GET(request: Request, { params }: Props) {
+export async function GET(request: NextRequest, { params }: Props) {
+  const { id } = await params;
   try {
     const cookieStore = await cookies();
-    const { id } = await params;
+
     const res = await api(`/notes/${id}`, {
       headers: {
         Cookie: cookieStore.toString(),
@@ -23,11 +24,14 @@ export async function GET(request: Request, { params }: Props) {
       logErrorResponse(error.response?.data);
       return NextResponse.json(
         { error: error.message, response: error.response?.data },
-        { status: error.status }
+        { status: error.status },
       );
     }
-    logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    logErrorResponse({ message: (error as ApiError).message });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
 
@@ -47,11 +51,14 @@ export async function DELETE(request: Request, { params }: Props) {
       logErrorResponse(error.response?.data);
       return NextResponse.json(
         { error: error.message, response: error.response?.data },
-        { status: error.status }
+        { status: error.status },
       );
     }
-    logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    logErrorResponse({ message: (error as ApiError).message });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
 
@@ -71,11 +78,17 @@ export async function PATCH(request: Request, { params }: Props) {
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);
       return NextResponse.json(
-        { error: error.message, response: error.response?.data },
-        { status: error.status }
+        {
+          error: (error as ApiError).message,
+          response: (error as ApiError).response?.data,
+        },
+        { status: (error as ApiError).status },
       );
     }
-    logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    logErrorResponse({ message: (error as ApiError).message });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

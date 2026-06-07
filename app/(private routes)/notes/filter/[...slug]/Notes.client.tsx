@@ -6,11 +6,11 @@ import { useDebouncedCallback } from "use-debounce";
 import Link from "next/link";
 
 import css from "./notes.module.css";
-import { fetchNotes } from "../../../../lib/api";
 
-import NoteList from "../../../../components/NoteList/NoteList";
-import SearchBox from "../../../../components/SearchBox/SearchBox";
-import Pagination from "../../../../components/Pagination/Pagination";
+import SearchBox from "@/components/SearchBox/SearchBox";
+import Pagination from "@/components/Pagination/Pagination";
+import NoteList from "@/components/NoteList/NoteList";
+import { fetchNotes } from "@/lib/api";
 
 type Props = {
   initialTag?: string;
