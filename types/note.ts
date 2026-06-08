@@ -8,3 +8,21 @@ export interface Note {
   updatedAt: string;
   tag: NoteTag;
 }
+
+export type NoteListResponse = {
+  notes: Note[];
+  totalPages: number;
+};
+
+export type CheckSessionRequest = {
+  success: boolean;
+};
+export type RegisterRequest = {
+  email: string;
+  password: string;
+  userName: string;
+};
+export type LoginRequest = {
+  email: string;
+  password: string;
+};

@@ -1,5 +1,6 @@
+import { NewNoteData } from "@/lib/api";
 import { create } from "zustand";
-import { NewNoteData } from "../api";
+
 import { persist } from "zustand/middleware";
 type NoteDraftStore = {
   draft: NewNoteData;

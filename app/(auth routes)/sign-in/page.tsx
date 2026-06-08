@@ -1,63 +1,51 @@
-"use client";
+'use client';
 
 // Додаємо імпорти
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { login, LoginRequest } from "@/lib/api";
-import { ApiError } from "@/app/api/api";
-import css from "./SignInPage.module.css";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { login, LoginRequest } from '@/lib/api';
+import { ApiError } from '@/app/api/api'
 
 const SignIn = () => {
   const router = useRouter();
-  const [error, setError] = useState("");
-  // Отримуємо метод із стора
-  const setUser = useAuthStore((state) => state.setUser);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (formData: FormData) => {
     try {
+	    // Типізуємо дані форми
       const formValues = Object.fromEntries(formData) as LoginRequest;
+      // Виконуємо запит
       const res = await login(formValues);
+      // Виконуємо редірект або відображаємо помилку
       if (res) {
-        // Записуємо користувача у глобальний стан
-        setUser(res);
-        router.push("/profile");
+        router.push('/profile');
       } else {
-        setError("Invalid email or password");
+        setError('Invalid email or password');
       }
     } catch (error) {
       setError(
         (error as ApiError).response?.data?.error ??
           (error as ApiError).message ??
-          "Oops... some error",
-      );
+          'Oops... some error'
+      )
     }
   };
 
   return (
-    <main className={css.mainContent}>
-      <form className={css.form} action={handleSubmit}>
-        <h1 className={css.formTitle}>Sign in</h1>
-        <label className={css.formGroup}>
-          Email
-          <input className={css.input} type="email" name="email" required />
-        </label>
-        <label className={css.formGroup}>
-          Password
-          <input
-            className={css.input}
-            type="password"
-            name="password"
-            required
-          />
-        </label>
-        <button type="submit" className={css.submitButton}>
-          Log in
-        </button>
-        {error && <p className={css.error}>{error}</p>}
-      </form>
-    </main>
+    <form action={handleSubmit}>
+      <h1>Sign in</h1>
+      <label>
+        Email
+        <input type="email" name="email" required />
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" required />
+      </label>
+      <button type="submit">Log in</button>
+      {error && <p>{error}</p>}
+    </form>
   );
 };
 
-export default SignIn;
+export default SignIn;;
