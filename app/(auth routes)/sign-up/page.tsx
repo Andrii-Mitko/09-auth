@@ -2,31 +2,34 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { register } from "@/lib/api";
-
 import css from "./SignUpPage.module.css";
+import { register, RegisterRequest } from "@/lib/api";
+import { useAuthStore } from "@/lib/store/authStore";
+import { ApiError } from "@/app/api/api";
 
-export default function SignUp() {
+const SignUp = () => {
   const router = useRouter();
   const [error, setError] = useState("");
+  // Отримуємо метод із стора
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      const formValues = {
-        userName: String(formData.get("userName") ?? ""),
-        email: String(formData.get("email") ?? ""),
-        password: String(formData.get("password") ?? ""),
-      };
-
+      const formValues = Object.fromEntries(formData) as RegisterRequest;
       const res = await register(formValues);
-
-      if (res) router.push("/profile");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
+      if (res) {
+        // Записуємо користувача у глобальний стан
+        setUser(res);
+        router.push("/profile");
       } else {
-        setError("Oops... some error");
+        setError("Invalid email or password");
       }
+    } catch (error) {
+      setError(
+        (error as ApiError).response?.data?.error ??
+          (error as ApiError).message ??
+          "Oops... some error",
+      );
     }
   };
 
@@ -85,4 +88,6 @@ export default function SignUp() {
       </form>
     </main>
   );
-}
+};
+
+export default SignUp;

@@ -1,39 +1,63 @@
-// Якщо користувач не авторизований, в AuthNavigation мають відображатися посилання на сторінки реєстрації (Register) та входу (Login).
+"use client";
 
-// Якщо користувач авторизований, в AuthNavigation мають відображатися:
-
-// посилання на сторінку профілю (Profile);
-// кнопка Logout, яка при натисканні викликає функцію виходу з акаунта і виконує редірект на сторінку Login.
-
-// Важливо: логіку виведення елементів Register, Login, Profile, Logout в хедері необхідно побудувати через умовний рендер на основі значення isAuthenticated з Zustand-стора.
+import Link from "next/link";
+import { useAuthStore } from "@/lib/store/authStore";
+import css from "./AuthNavigation.module.css";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/api";
 
 const AuthNavigation = () => {
-  return <li>AuthNavigation</li>;
+  const router = useRouter();
+  // Отримуємо поточну сесію та юзера
+  const { isAuthenticated, user } = useAuthStore();
+
+  // Отримуємо метод очищення глобального стану
+  const clearIsAuthenticated = useAuthStore(
+    (state) => state.clearIsAuthenticated,
+  );
+
+  const handleLogout = async () => {
+    // Викликаємо logout
+    await logout();
+    // Чистимо глобальний стан
+    clearIsAuthenticated();
+    // Виконуємо навігацію на сторінку авторизації
+    router.push("/sign-in");
+  };
+
+  // Якщо є сесія - відображаємо кнопку Logout та інформацію про користувача
+  // інакше - лінки для авторизації
+  return isAuthenticated ? (
+    <li>
+      <p>{user?.email}</p>
+      <button onClick={handleLogout}>Logout</button>
+    </li>
+  ) : (
+    <>
+      <li className={css.navigationItem}>
+        <Link href="/profile" prefetch={false} className={css.navigationLink}>
+          Profile
+        </Link>
+      </li>
+
+      <li className={css.navigationItem}>
+        <p className={css.userEmail}>User email</p>
+        <button className={css.logoutButton}>Logout</button>
+      </li>
+
+      <li className={css.navigationItem}>
+        <Link href="/sign-in" prefetch={false} className={css.navigationLink}>
+          Login
+        </Link>
+      </li>
+
+      <li className={css.navigationItem}>
+        <Link href="/sign-up" prefetch={false} className={css.navigationLink}>
+          Sign up
+        </Link>
+      </li>
+    </>
+  );
 };
 
 export default AuthNavigation;
-
-//  <li className={css.navigationItem}>
-//   <a href="/profile" prefetch={false} className={css.navigationLink}>
-//     Profile
-//   </a>
-// </li>
-
-// <li className={css.navigationItem}>
-//   <p className={css.userEmail}>User email</p>
-//   <button className={css.logoutButton}>
-//     Logout
-//   </button>
-// </li>
-
-// <li className={css.navigationItem}>
-//   <a href="/sign-in" prefetch={false} className={css.navigationLink}>
-//     Login
-//   </a>
-// </li>
-
-// <li className={css.navigationItem}>
-//   <a href="/sign-up" prefetch={false} className={css.navigationLink}>
-//     Sign up
-//   </a>
-// </li>

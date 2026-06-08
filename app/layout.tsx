@@ -42,19 +42,21 @@ export default function RootLayout({
   modal: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-      <body>
+    <html lang="en">
+      <body className={`${roboto.variable} ${css.body}`}>
         <TanStackProvider>
           <AuthProvider>
+            {" "}
+            {/* <-- додаємо провайдер */}
             <Header />
             <main className={css.main}>
               {children}
               {modal}
             </main>
             <Footer />
-          </AuthProvider>
+          </AuthProvider>{" "}
+          {/* <-- додаємо провайдер */}
         </TanStackProvider>
-        <div id="modal-root" />
       </body>
     </html>
   );
