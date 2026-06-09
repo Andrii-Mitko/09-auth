@@ -1,56 +1,67 @@
-'use client';
+"use client";
 
 // Додаємо імпорти
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { register, RegisterRequest } from '@/lib/api';
-import { ApiError } from '@/app/api/api'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import css from "./SignUpPage.module.css";
+import { ApiError } from "@/app/api/api";
+import { RegisterRequest } from "@/types/note";
+import { register } from "@/lib/api";
 
 const SignUp = () => {
   const router = useRouter();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (formData: FormData) => {
     try {
-	    // Типізуємо дані форми
+      // Типізуємо дані форми
       const formValues = Object.fromEntries(formData) as RegisterRequest;
       // Виконуємо запит
       const res = await register(formValues);
       // Виконуємо редірект або відображаємо помилку
       if (res) {
-        router.push('/profile');
+        router.push("/profile");
       } else {
-        setError('Invalid email or password');
+        setError("Invalid email or password");
       }
     } catch (error) {
       setError(
         (error as ApiError).response?.data?.error ??
           (error as ApiError).message ??
-          'Oops... some error'
-      )
+          "Oops... some error",
+      );
     }
   };
 
   return (
-    <>
-      <h1>Sign up</h1>
-      <form action={handleSubmit}>
-        <label>
+    <main className={css.mainContent}>
+      <h1 className={css.formTitle}>Sign up</h1>
+      <form className={css.form} action={handleSubmit}>
+        <label className={css.formGroup}>
           Username
-          <input type="text" name="userName" required />
+          <input className={css.input} type="text" name="userName" required />
         </label>
-        <label>
+        <label className={css.formGroup}>
           Email
-          <input type="email" name="email" required />
+          <input className={css.input} type="email" name="email" required />
         </label>
-        <label>
+        <label className={css.formGroup}>
           Password
-          <input type="password" name="password" required />
+          <input
+            className={css.input}
+            type="password"
+            name="password"
+            required
+          />
         </label>
-        <button type="submit">Register</button>
+        <div className={css.actions}>
+          <button type="submit" className={css.submitButton}>
+            Register
+          </button>
+        </div>
       </form>
-      {error && <p>{error}</p>}
-    </>
+      {error && <p className={css.error}>{error}</p>}
+    </main>
   );
 };
 

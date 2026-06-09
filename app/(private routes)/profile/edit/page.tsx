@@ -1,41 +1,68 @@
-// Достатньо реалізувати можливість редагування лише для поля з іменем користувача (username), при цьому в полі інпуту має бути встановлене початкове значення поточного імені. Email користувача відображається у вигляді звичайного тексту, без можливості редагування. Аватар користувача відображається зображенням, без можливості редагування, використовуйте компонент Image від Next.js.
+"use client";
 
-// При натисканні на кнопку Save має відправлятися запит на оновлення імені користувача через API. У разі успішного оновлення має виконуватися автоматичне перенаправлення (редірект) на сторінку профілю /profile.
+import { useEffect, useState } from "react";
+import AvatarPicker from "@/components/AvatarPicker/AvatarPicker";
+import { updateMe, uploadImage } from "@/lib/api/clientApi";
+import { getMe } from "@/lib/api";
+import css from "./EditProfilePage.module.css";
 
-// При натисканні на кнопку Cancel користувач повинен повернутися назад на сторінку профілю.
+const EditProfile = () => {
+  const [userName, setUserName] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-{
-  /* <main className={css.mainContent}>
-  <div className={css.profileCard}>
-    <h1 className={css.formTitle}>Edit Profile</h1>
+  useEffect(() => {
+    getMe().then((user) => {
+      setUserName(user.userName ?? "");
+      setPhotoUrl(user.photoUrl ?? "");
+    });
+  }, []);
 
-    <img src="avatar"
-      alt="User Avatar"
-      width={120}
-      height={120}
-      className={css.avatar}
-    />
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
+  };
 
-    <form className={css.profileInfo}>
-      <div className={css.usernameWrapper}>
-        <label htmlFor="username">Username:</label>
-        <input id="username"
-          type="text"
-          className={css.input}
-        />
+  const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const newPhotoUrl = imageFile ? await uploadImage(imageFile) : photoUrl;
+
+      await updateMe({
+        userName,
+        photoUrl: newPhotoUrl,
+      });
+    } catch (error) {
+      console.error("Oops, some error:", error);
+    }
+  };
+
+  return (
+    <div className={css.mainContent}>
+      <div className={css.profileCard}>
+        <h1 className={css.formTitle}>Edit profile</h1>
+
+        <AvatarPicker profilePhotoUrl={photoUrl} onChangePhoto={setImageFile} />
+
+        <form onSubmit={handleSaveUser} className={css.profileInfo}>
+          <div className={css.usernameWrapper}>
+            <label>Username</label>
+            <input
+              type="text"
+              value={userName}
+              onChange={handleChange}
+              className={css.input}
+            />
+          </div>
+
+          <div className={css.actions}>
+            <button type="submit" className={css.saveButton}>
+              Save
+            </button>
+          </div>
+        </form>
       </div>
+    </div>
+  );
+};
 
-      <p>Email: user_email@example.com</p>
-
-      <div className={css.actions}>
-        <button type="submit" className={css.saveButton}>
-          Save
-        </button>
-        <button type="button" className={css.cancelButton}>
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
-</main> */
-}
+export default EditProfile;

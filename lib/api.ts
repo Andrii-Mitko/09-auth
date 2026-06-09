@@ -67,3 +67,13 @@ export const fetchNotes = async (params: {
 
   return res.data;
 };
+
+export const fetchNoteById = async (id: string) => {
+  const res = await nextServer.get(`/notes/${id}`);
+  return res.data;
+};
+
+export const createNote = async (data: NewNoteData) => {
+  const res = await nextServer.post("/notes", data);
+  return res.data;
+};

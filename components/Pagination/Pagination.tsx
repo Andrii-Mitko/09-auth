@@ -26,6 +26,14 @@ export default function Pagination({
       pageRangeDisplayed={5}
       marginPagesDisplayed={1}
       activeClassName={css.active}
+      pageClassName={css.pageItem}
+      pageLinkClassName={css.pageLink}
+      previousClassName={css.pageItem}
+      nextClassName={css.pageItem}
+      previousLinkClassName={css.pageLink}
+      nextLinkClassName={css.pageLink}
+      breakClassName={css.pageItem}
+      breakLinkClassName={css.pageLink}
     />
   );
 }

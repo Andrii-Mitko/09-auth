@@ -5,11 +5,14 @@ import { useRouter } from "next/navigation";
 import { useNoteDraftStore } from "@/lib/store/noteStore";
 import type { NoteTag } from "@/types/note";
 import css from "./NoteForm.module.css";
+import { useState } from "react";
+
 type Props = {
   categories: NoteTag[];
 };
 
 const NoteForm = ({ categories }: Props) => {
+  const [error, setError] = useState("");
   const router = useRouter();
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
@@ -29,6 +32,9 @@ const NoteForm = ({ categories }: Props) => {
     onSuccess: () => {
       router.push("/notes/filter/all");
       clearDraft();
+    },
+    onError: () => {
+      setError("Failed to create note");
     },
   });
 
@@ -88,6 +94,7 @@ const NoteForm = ({ categories }: Props) => {
           Cancel
         </button>
       </div>
+      {error && <p className={css.error}>{error}</p>}
     </form>
   );
 };
