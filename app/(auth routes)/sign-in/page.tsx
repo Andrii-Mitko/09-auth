@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { ApiError } from "@/app/api/api";
 import css from "./SignInPage.module.css";
 import { LoginRequest } from "@/types/note";
-import { login } from "@/lib/api";
+import { login } from "@/lib/api/api";
+
 
 const SignIn = () => {
   const router = useRouter();

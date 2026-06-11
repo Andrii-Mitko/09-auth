@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./AuthNavigation.module.css";
 import { useRouter } from "next/navigation";
-import { logout } from "@/lib/api";
+import { logout } from "@/lib/api/api";
 
 const AuthNavigation = () => {
   const router = useRouter();

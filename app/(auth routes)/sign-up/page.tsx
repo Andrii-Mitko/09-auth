@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import css from "./SignUpPage.module.css";
 import { ApiError } from "@/app/api/api";
 import { RegisterRequest } from "@/types/note";
-import { register } from "@/lib/api";
+import { register } from "@/lib/api/api";
+
 
 const SignUp = () => {
   const router = useRouter();
