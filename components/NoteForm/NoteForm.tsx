@@ -1,11 +1,12 @@
 "use client";
-import { createNote, NewNoteData } from "@/lib/api";
+
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useNoteDraftStore } from "@/lib/store/noteStore";
 import type { NoteTag } from "@/types/note";
 import css from "./NoteForm.module.css";
 import { useState } from "react";
+import { createNote, NewNoteData } from "@/lib/api/api";
 
 type Props = {
   categories: NoteTag[];
