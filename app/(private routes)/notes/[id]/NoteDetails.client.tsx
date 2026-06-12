@@ -1,8 +1,7 @@
 "use client";
 
-import { fetchNoteById } from "@/lib/api/api";
+import { fetchNoteById } from "@/lib/api/clientApi";
 import { useQuery } from "@tanstack/react-query";
-
 
 export default function NoteDetailsClient({ id }: { id: string }) {
   const { data, isLoading, isError } = useQuery({

@@ -2,35 +2,36 @@
 
 import { useEffect, useState } from "react";
 import AvatarPicker from "@/components/AvatarPicker/AvatarPicker";
-import { updateMe, uploadImage } from "@/lib/api/clientApi";
+import { updateMe, getMe } from "@/lib/api/clientApi";
+import { uploadImage } from "@/lib/api/api";
 
 import css from "./EditProfilePage.module.css";
-import { getMe } from "@/lib/api/api";
 
 const EditProfile = () => {
-  const [userName, setUserName] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [username, setUsername] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     getMe().then((user) => {
-      setUserName(user.userName ?? "");
-      setPhotoUrl(user.photoUrl ?? "");
+      setUsername(user.username ?? "");
+      setAvatar(user.avatar ?? "");
     });
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(event.target.value);
+    setUsername(event.target.value);
   };
 
   const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     try {
-      const newPhotoUrl = imageFile ? await uploadImage(imageFile) : photoUrl;
+      const newAvatar = imageFile ? await uploadImage(imageFile) : avatar;
 
       await updateMe({
-        userName,
-        photoUrl: newPhotoUrl,
+        username,
+        avatar: newAvatar,
       });
     } catch (error) {
       console.error("Oops, some error:", error);
@@ -42,14 +43,14 @@ const EditProfile = () => {
       <div className={css.profileCard}>
         <h1 className={css.formTitle}>Edit profile</h1>
 
-        <AvatarPicker profilePhotoUrl={photoUrl} onChangePhoto={setImageFile} />
+        <AvatarPicker profilePhotoUrl={avatar} onChangePhoto={setImageFile} />
 
         <form onSubmit={handleSaveUser} className={css.profileInfo}>
           <div className={css.usernameWrapper}>
             <label>Username</label>
             <input
               type="text"
-              value={userName}
+              value={username}
               onChange={handleChange}
               className={css.input}
             />

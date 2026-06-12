@@ -18,9 +18,8 @@ const Profile = async () => {
         </div>
 
         <div className={css.avatarWrapper}>
-          {/* если нет фото — можно fallback */}
           <Image
-            src={user.photoUrl || "/default-avatar.png"}
+            src={user.avatar || "/default-avatar.png"}
             alt="avatar"
             width={120}
             height={120}
@@ -31,7 +30,7 @@ const Profile = async () => {
         <div className={css.profileInfo}>
           <div className={css.usernameWrapper}>
             <span>Username</span>
-            <span>{user.userName}</span>
+            <span>{user.username}</span>
           </div>
 
           <div className={css.usernameWrapper}>

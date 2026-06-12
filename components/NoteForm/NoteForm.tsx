@@ -6,7 +6,8 @@ import { useNoteDraftStore } from "@/lib/store/noteStore";
 import type { NoteTag } from "@/types/note";
 import css from "./NoteForm.module.css";
 import { useState } from "react";
-import { createNote, NewNoteData } from "@/lib/api/api";
+import { createNote } from "@/lib/api/clientApi";
+import { NewNoteData } from "@/lib/api/api";
 
 type Props = {
   categories: NoteTag[];

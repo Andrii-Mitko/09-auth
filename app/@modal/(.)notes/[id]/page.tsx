@@ -8,7 +8,7 @@ import Modal from "@/components/Modal/Modal";
 import NotePreview from "@/components/NotePreview/NotePreview";
 
 import { Metadata } from "next";
-import { fetchNoteById } from "@/lib/api/api";
+import { fetchNoteById } from "@/lib/api/clientApi";
 
 type Props = {
   params: Promise<{

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { api, ApiError } from "../../api";
+import { api } from "../../api";
 import { parse } from "cookie";
 import { cookies } from "next/headers";
+import { isAxiosError } from "axios";
+import { logErrorResponse } from "../../_utils/utils";
 
 export async function POST(req: NextRequest) {
   // Парсимо тіло запиту
@@ -33,17 +35,32 @@ export async function POST(req: NextRequest) {
           cookieStore.set("refreshToken", parsed.refreshToken, options);
         }
       }
-      return NextResponse.json(apiRes.data);
+      return NextResponse.json(apiRes.data, {
+        status: apiRes.status,
+      });
     }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   } catch (error) {
+    if (isAxiosError(error)) {
+      logErrorResponse(error.response?.data);
+
+      return NextResponse.json(
+        {
+          error: error.response?.data?.error ?? error.message,
+        },
+        {
+          status: error.response?.status ?? 500,
+        },
+      );
+    }
+
     return NextResponse.json(
       {
-        error:
-          (error as ApiError).response?.data?.error ??
-          (error as ApiError).message,
+        error: "Internal Server Error",
       },
-      { status: (error as ApiError).status },
+      {
+        status: 500,
+      },
     );
   }
 }
