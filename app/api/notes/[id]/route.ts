@@ -8,21 +8,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-function errorResponse(error: unknown) {
-  if (isAxiosError(error)) {
-    logErrorResponse(error.response?.data);
-
-    return NextResponse.json(error.response?.data, {
-      status: error.response?.status ?? 500,
-    });
-  }
-
-  logErrorResponse({ message: (error as Error).message });
-
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-}
-
-export async function GET(_: Request, { params }: Props) {
+export async function GET(request: Request, { params }: Props) {
   try {
     const { id } = await params;
 
@@ -36,11 +22,24 @@ export async function GET(_: Request, { params }: Props) {
 
     return NextResponse.json(data);
   } catch (error) {
-    return errorResponse(error);
+    if (isAxiosError(error)) {
+      logErrorResponse(error.response?.data);
+
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status ?? 500,
+      });
+    }
+
+    logErrorResponse({ message: (error as Error).message });
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
 
-export async function DELETE(_: Request, { params }: Props) {
+export async function DELETE(request: Request, { params }: Props) {
   try {
     const { id } = await params;
 
@@ -54,16 +53,29 @@ export async function DELETE(_: Request, { params }: Props) {
 
     return NextResponse.json(data);
   } catch (error) {
-    return errorResponse(error);
+    if (isAxiosError(error)) {
+      logErrorResponse(error.response?.data);
+
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status ?? 500,
+      });
+    }
+
+    logErrorResponse({ message: (error as Error).message });
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
 
-export async function PATCH(_: Request, { params }: Props) {
+export async function PATCH(request: Request, { params }: Props) {
   try {
     const { id } = await params;
 
     const cookieStore = cookies();
-    const body = await _.json();
+    const body = await request.json();
 
     const { data } = await api.patch(`/notes/${id}`, body, {
       headers: {
@@ -73,6 +85,19 @@ export async function PATCH(_: Request, { params }: Props) {
 
     return NextResponse.json(data);
   } catch (error) {
-    return errorResponse(error);
+    if (isAxiosError(error)) {
+      logErrorResponse(error.response?.data);
+
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status ?? 500,
+      });
+    }
+
+    logErrorResponse({ message: (error as Error).message });
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
