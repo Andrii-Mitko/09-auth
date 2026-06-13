@@ -54,6 +54,9 @@ export async function POST(req: NextRequest) {
         },
       );
     }
+    logErrorResponse({
+      message: (error as Error).message,
+    });
 
     return NextResponse.json(
       {
