@@ -48,7 +48,6 @@ export default function RootLayout({
       <body className={`${roboto.variable} ${css.body}`}>
         <TanStackProvider>
           <AuthProvider>
-            {" "}
             {/* <-- додаємо провайдер */}
             <Header />
             <main className={css.main}>

@@ -6,16 +6,20 @@ import { updateMe, getMe } from "@/lib/api/clientApi";
 import { uploadImage } from "@/lib/api/api";
 
 import css from "./EditProfilePage.module.css";
+import { useRouter } from "next/navigation";
 
 const EditProfile = () => {
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  const [email, setEmail] = useState("");
+  const router = useRouter();
   useEffect(() => {
     getMe().then((user) => {
       setUsername(user.username ?? "");
       setAvatar(user.avatar ?? "");
+      setEmail(user.email ?? "");
     });
   }, []);
 
@@ -54,11 +58,20 @@ const EditProfile = () => {
               onChange={handleChange}
               className={css.input}
             />
+            <label>Email</label>
+            <input type="text" value={email} disabled className={css.input} />
           </div>
 
           <div className={css.actions}>
             <button type="submit" className={css.saveButton}>
               Save
+            </button>
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className={css.cancelButton}
+            >
+              Cancel
             </button>
           </div>
         </form>

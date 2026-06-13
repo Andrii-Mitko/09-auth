@@ -8,6 +8,7 @@ import css from "./NoteForm.module.css";
 import { useState } from "react";
 import { createNote } from "@/lib/api/clientApi";
 import { NewNoteData } from "@/lib/api/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   categories: NoteTag[];
@@ -17,7 +18,7 @@ const NoteForm = ({ categories }: Props) => {
   const [error, setError] = useState("");
   const router = useRouter();
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
-
+  const queryClient = useQueryClient();
   const handleChange = (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -32,6 +33,8 @@ const NoteForm = ({ categories }: Props) => {
   const { mutate } = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+
       router.push("/notes/filter/all");
       clearDraft();
     },
