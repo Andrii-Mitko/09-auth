@@ -8,7 +8,7 @@ import Modal from "@/components/Modal/Modal";
 import NotePreview from "@/components/NotePreview/NotePreview";
 
 import { Metadata } from "next";
-import { fetchNoteById } from "@/lib/api/clientApi";
+import { getServerNoteById } from "@/lib/api/serverApi";
 
 type Props = {
   params: Promise<{
@@ -18,7 +18,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const note = await fetchNoteById(id);
+  const note = await getServerNoteById(id);
   return {
     title: `Note: ${note.title}`,
     description: note.content.slice(0, 30),
@@ -53,7 +53,7 @@ const ModalNotePage = async ({ params }: Props) => {
 
   await queryClient.prefetchQuery({
     queryKey: ["note", id],
-    queryFn: () => fetchNoteById(id),
+    queryFn: () => getServerNoteById(id),
   });
 
   return (

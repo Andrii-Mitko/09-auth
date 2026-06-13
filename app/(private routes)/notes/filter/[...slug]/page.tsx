@@ -7,7 +7,7 @@ import {
 import NotesClient from "./Notes.client";
 
 import { Metadata } from "next";
-import { fetchNotes } from "@/lib/api/clientApi";
+import { fetchServerNotes } from "@/lib/api/serverApi";
 
 type Props = {
   params: Promise<{
@@ -50,7 +50,7 @@ const FilterPage = async ({ params }: Props) => {
   await queryClient.prefetchQuery({
     queryKey: ["notes", 1, "", tag],
     queryFn: () =>
-      fetchNotes({
+      fetchServerNotes({
         page: 1,
         perPage: 12,
         search: "",

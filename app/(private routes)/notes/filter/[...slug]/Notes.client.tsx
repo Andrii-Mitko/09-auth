@@ -13,7 +13,7 @@ import NoteList from "@/components/NoteList/NoteList";
 import { fetchNotes } from "@/lib/api/clientApi";
 
 type Props = {
-  initialTag?: string;
+  initialTag: string;
 };
 
 export default function NotesClient({ initialTag }: Props) {

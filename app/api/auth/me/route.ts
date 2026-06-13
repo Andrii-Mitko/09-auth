@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { api, ApiError } from "../../api";
+
 import { cookies } from "next/headers";
+import { api } from "../../api";
+import axios from "axios";
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -14,17 +16,21 @@ export async function GET() {
 
     return NextResponse.json(data);
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return NextResponse.json(
+        {
+          error: error.response?.data?.error ?? error.message,
+        },
+        { status: error.response?.status ?? 500 },
+      );
+    }
+
     return NextResponse.json(
-      {
-        error:
-          (error as ApiError).response?.data?.error ??
-          (error as ApiError).message,
-      },
-      { status: (error as ApiError).status },
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
-
 export async function PUT(request: Request) {
   const cookieStore = await cookies();
   const body = await request.json();
@@ -37,13 +43,18 @@ export async function PUT(request: Request) {
 
     return NextResponse.json(data);
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return NextResponse.json(
+        {
+          error: error.response?.data?.error ?? error.message,
+        },
+        { status: error.response?.status ?? 500 },
+      );
+    }
+
     return NextResponse.json(
-      {
-        error:
-          (error as ApiError).response?.data?.error ??
-          (error as ApiError).message,
-      },
-      { status: (error as ApiError).status },
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

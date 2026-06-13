@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { ApiError } from "@/app/api/api";
+import axios from "axios";
 import css from "./SignInPage.module.css";
 import { LoginRequest } from "@/types/note";
 import { login, getMe } from "@/lib/api/clientApi";
@@ -36,9 +35,11 @@ const SignIn = () => {
       }
     } catch (error) {
       setError(
-        (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          "Oops... some error",
+        axios.isAxiosError(error)
+          ? (error.response?.data?.error ??
+              error.message ??
+              "Oops... some error")
+          : "Oops... some error",
       );
     }
   };

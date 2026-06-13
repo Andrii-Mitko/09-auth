@@ -9,13 +9,13 @@ import NoteDetailsClient from "./NoteDetails.client";
 import { getServerNoteById } from "@/lib/api/serverApi";
 
 type Props = {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const note = await getServerNoteById(params.id);
+  const { id } = await params;
+
+  const note = await getServerNoteById(id);
 
   return {
     title: note.title,
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: note.title,
       description: note.content.slice(0, 120),
-      url: `http://localhost:3000/notes/${params.id}`,
+      url: `http://localhost:3000/notes/${id}`,
       images: [
         {
           url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const { id } = params;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
 

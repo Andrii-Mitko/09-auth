@@ -4,13 +4,3 @@ export const api = axios.create({
   baseURL: "https://notehub-api.goit.study",
   withCredentials: true,
 });
-
-export interface ApiError {
-  response?: {
-    data?: {
-      error?: string;
-    };
-  };
-  message?: string;
-  status?: number;
-}

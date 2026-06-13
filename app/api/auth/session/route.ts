@@ -26,52 +26,38 @@ export async function GET() {
       const setCookie = apiRes.headers["set-cookie"];
 
       if (setCookie) {
+        const response = NextResponse.json({ success: true }, { status: 200 });
+
         const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
 
         for (const cookieStr of cookieArray) {
           const parsed = parse(cookieStr);
 
           const options = {
-            expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
-            path: parsed.Path,
-            maxAge: Number(parsed["Max-Age"]),
+            path: parsed.path,
+            maxAge: parsed["max-age"] ? Number(parsed["max-age"]) : undefined,
+            expires: parsed.expires ? new Date(parsed.expires) : undefined,
           };
 
           if (parsed.accessToken) {
-            cookieStore.set("accessToken", parsed.accessToken, options);
+            response.cookies.set("accessToken", parsed.accessToken, options);
           }
 
           if (parsed.refreshToken) {
-            cookieStore.set("refreshToken", parsed.refreshToken, options);
+            response.cookies.set("refreshToken", parsed.refreshToken, options);
           }
         }
 
-        return NextResponse.json({ success: true }, { status: 200 });
+        return response;
       }
     }
 
-    return NextResponse.json({ success: false }, { status: 401 });
+    return NextResponse.json({ success: false }, { status: 200 });
   } catch (error) {
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);
-
-      return NextResponse.json(
-        {
-          error: error.response?.data?.error ?? error.message,
-        },
-        {
-          status: error.response?.status ?? 500,
-        },
-      );
     }
 
-    return NextResponse.json(
-      {
-        error: "Internal Server Error",
-      },
-      {
-        status: 500,
-      },
-    );
+    return NextResponse.json({ success: false }, { status: 200 });
   }
 }

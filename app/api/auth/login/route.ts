@@ -46,10 +46,11 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(
         {
-          error: error.response?.data?.error ?? error.message,
+          error: error.message,
+          response: error.response?.data,
         },
         {
-          status: error.response?.status ?? 500,
+          status: error.status,
         },
       );
     }

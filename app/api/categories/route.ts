@@ -1,21 +1,25 @@
+import axios from "axios";
 import { NextResponse } from "next/server";
-import { api, ApiError } from "../api";
+import { api } from "../api";
 
 export async function GET() {
   try {
-    const { data } = await api("/categories");
+    const { data } = await api.get("/categories");
 
-    // Повертаємо те, що відповів бекенд через метод json
     return NextResponse.json(data);
   } catch (error) {
-    // У випадку помилки — повертаємо обʼєкт з помилкою
+    if (axios.isAxiosError(error)) {
+      return NextResponse.json(
+        {
+          error: error.response?.data?.error ?? error.message,
+        },
+        { status: error.response?.status ?? 500 },
+      );
+    }
+
     return NextResponse.json(
-      {
-        error:
-          (error as ApiError).response?.data?.error ??
-          (error as ApiError).message,
-      },
-      { status: (error as ApiError).status },
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

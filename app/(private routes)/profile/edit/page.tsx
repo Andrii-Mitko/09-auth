@@ -3,25 +3,29 @@
 import { useEffect, useState } from "react";
 import AvatarPicker from "@/components/AvatarPicker/AvatarPicker";
 import { updateMe, getMe } from "@/lib/api/clientApi";
-import { uploadImage } from "@/lib/api/api";
 
 import css from "./EditProfilePage.module.css";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const EditProfile = () => {
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
   const [email, setEmail] = useState("");
+
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
+
   useEffect(() => {
     getMe().then((user) => {
       setUsername(user.username ?? "");
       setAvatar(user.avatar ?? "");
       setEmail(user.email ?? "");
+
+      //  синхронізуємо store при завантаженні
+      setUser(user);
     });
-  }, []);
+  }, [setUser]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -31,12 +35,12 @@ const EditProfile = () => {
     event.preventDefault();
 
     try {
-      const newAvatar = imageFile ? await uploadImage(imageFile) : avatar;
-
-      await updateMe({
+      const updatedUser = await updateMe({
         username,
-        avatar: newAvatar,
       });
+
+      // оновлюємо глобальний state
+      setUser(updatedUser);
     } catch (error) {
       console.error("Oops, some error:", error);
     }
@@ -47,7 +51,7 @@ const EditProfile = () => {
       <div className={css.profileCard}>
         <h1 className={css.formTitle}>Edit profile</h1>
 
-        <AvatarPicker profilePhotoUrl={avatar} onChangePhoto={setImageFile} />
+        <AvatarPicker profilePhotoUrl={avatar} onChangePhoto={() => {}} />
 
         <form onSubmit={handleSaveUser} className={css.profileInfo}>
           <div className={css.usernameWrapper}>
@@ -58,6 +62,7 @@ const EditProfile = () => {
               onChange={handleChange}
               className={css.input}
             />
+
             <label>Email</label>
             <input type="text" value={email} disabled className={css.input} />
           </div>
@@ -66,6 +71,7 @@ const EditProfile = () => {
             <button type="submit" className={css.saveButton}>
               Save
             </button>
+
             <button
               type="button"
               onClick={() => router.back()}

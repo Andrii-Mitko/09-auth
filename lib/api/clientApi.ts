@@ -21,11 +21,10 @@ export const fetchNotes = async (params: {
 
 export type UpdateUserRequest = {
   username: string;
-  avatar: string;
 };
 
 export const updateMe = async (payload: UpdateUserRequest) => {
-  const res = await nextServer.patch<User>("/auth/me", payload);
+  const res = await nextServer.patch<User>("/users/me", payload);
   return res.data;
 };
 
@@ -50,7 +49,7 @@ export const checkSession = async () => {
 };
 
 export const getMe = async () => {
-  const { data } = await nextServer.get<User>("/auth/me");
+  const { data } = await nextServer.get<User>("/users/me");
   return data;
 };
 
