@@ -26,3 +26,8 @@ export type LoginRequest = {
   email: string;
   password: string;
 };
+
+export type NewNote = Omit<Note, "id" | "createdAt" | "updatedAt">;
+
+export const tags = ["Todo", "Work", "Personal", "Meeting", "Shopping"];
+export type Tag = (typeof tags)[number];

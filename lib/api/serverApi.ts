@@ -26,9 +26,9 @@ export const getServerMe = async (): Promise<User> => {
   return data;
 };
 
-export const getServerNoteById = async (id: string): Promise<Note> => {
+export const getServerNoteById = async (id: string) => {
   const cookieStore = await cookies();
-  const { data } = await nextServer.get(`/notes/${id}`, {
+  const { data } = await nextServer.get<Note>(`/notes/${id}`, {
     headers: {
       Cookie: cookieStore.toString(),
     },
@@ -36,15 +36,22 @@ export const getServerNoteById = async (id: string): Promise<Note> => {
   return data;
 };
 
-export const fetchServerNotes = async (params: {
-  page: number;
-  perPage: number;
-  search?: string;
-  tag?: string;
-}) => {
-  const res = await nextServer.get("/notes", {
-    params,
-  });
+interface FetchNotesResponse {
+  notes: Note[];
+  totalPages: number;
+}
 
-  return res.data;
+export const fetchServerNotes = async (
+  search?: string,
+  page?: number,
+  tag?: string,
+): Promise<FetchNotesResponse> => {
+  const cookieStore = await cookies();
+  const { data } = await nextServer.get("/notes", {
+    params: { search: String(search), page, tag },
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
+  });
+  return data;
 };

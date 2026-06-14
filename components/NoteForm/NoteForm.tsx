@@ -7,8 +7,9 @@ import type { NoteTag } from "@/types/note";
 import css from "./NoteForm.module.css";
 import { useState } from "react";
 import { createNote } from "@/lib/api/clientApi";
-import { NewNoteData } from "@/lib/api/api";
+
 import { useQueryClient } from "@tanstack/react-query";
+import { NewNoteData } from "@/lib/api/api";
 
 type Props = {
   categories: NoteTag[];

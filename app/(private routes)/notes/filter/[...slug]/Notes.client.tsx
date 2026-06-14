@@ -26,15 +26,8 @@ export default function NotesClient({ initialTag }: Props) {
   }, 300);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", page, search, initialTag],
-    queryFn: () => {
-      return fetchNotes({
-        page,
-        perPage: 12,
-        search,
-        tag: initialTag === "all" ? undefined : initialTag,
-      });
-    },
+    queryKey: ["notes", search, page, initialTag],
+    queryFn: () => fetchNotes(search, page, initialTag),
     placeholderData: keepPreviousData,
   });
 
