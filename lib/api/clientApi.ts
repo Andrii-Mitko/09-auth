@@ -2,19 +2,24 @@ import { User } from "@/types/user";
 import type { NewNote, Note } from "../../types/note";
 import { nextServer } from "./api";
 
-interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
-}
-
 export const fetchNotes = async (
   search?: string,
   page?: number,
   tag?: string,
-): Promise<FetchNotesResponse> => {
-  const { data } = await nextServer.get<FetchNotesResponse>("/notes", {
-    params: { search: String(search), page, tag },
+) => {
+  const params: Record<string, string | number> = {
+    search: search ?? "",
+    page: page ?? 1,
+  };
+
+  if (tag && tag !== "all") {
+    params.tag = tag;
+  }
+
+  const { data } = await nextServer.get("/notes", {
+    params,
   });
+
   return data;
 };
 

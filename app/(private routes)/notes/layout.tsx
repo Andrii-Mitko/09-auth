@@ -8,8 +8,6 @@ type Props = {
 const NotesLayout = ({ children, modal }: Props) => {
   return (
     <section className={css.container}>
-      <aside className={css.sidebar}>Sidebar</aside>
-
       <div className={css.notesWrapper}>{children}</div>
 
       {modal}
