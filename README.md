@@ -95,6 +95,14 @@ This application depends on a separate backend API. Configure the correct API UR
 
 Never commit credentials, private API keys, or `.env.local` to the repository.
 
+## Author
+
+**Andrii Mitko**
+
+- GitHub: [@Andrii-Mitko](https://github.com/Andrii-Mitko)
+- LinkedIn: [Andrii Mitko](https://www.linkedin.com/in/andrii-mitko/)
+- Portfolio: [andrii-mitko-brand.vercel.app](https://andrii-mitko-brand.vercel.app/)
+
 ---
 
 Built with Next.js, React, and TypeScript.
