@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import css from "./SignUpPage.module.css";
 
-import { RegisterRequest } from "@/types/note";
-import { register } from "@/lib/api/clientApi";
+import { register, type RegisterRequest } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 
 const SignUp = () => {
@@ -16,7 +15,12 @@ const SignUp = () => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      const formValues = Object.fromEntries(formData) as RegisterRequest;
+      const formValues: RegisterRequest = {
+        email: String(formData.get("email") ?? "")
+          .trim()
+          .toLowerCase(),
+        password: String(formData.get("password") ?? ""),
+      };
 
       const user = await register(formValues);
 

@@ -1,6 +1,6 @@
+import Link from "next/link";
 import AuthNavigation from "../AuthNavigation/AuthNavigation";
 import css from "./Header.module.css";
-import Link from "next/link";
 
 const Header = () => {
   return (
@@ -8,42 +8,32 @@ const Header = () => {
       <Link className={css.headerLink} href="/" aria-label="Home">
         NoteHub
       </Link>
-      <nav aria-label="Main Navigation">
+
+      <nav aria-label="Primary navigation">
         <ul className={css.navigation}>
           <li className={css.navigationItem}>
             <Link className={css.navigationLink} href="/">
               Home
             </Link>
           </li>
+
           <li className={css.navigationItem}>
             <Link className={css.navigationLink} href="/notes/filter/all">
               Notes
             </Link>
           </li>
-          <li className={css.navigationItem}>
-            <Link className={css.navigationLink} href="/profile">
-              Profile
-            </Link>
-          </li>
+
           <li className={css.navigationItem}>
             <Link className={css.navigationLink} href="/about">
               About
             </Link>
           </li>
-          <li className={css.navigationItem}>
-            <Link className={css.navigationLink} href="/sign-in">
-              Login
-            </Link>
-          </li>
-          <li className={css.navigationItem}>
-            <Link className={css.navigationLink} href="/sign-up">
-              Register
-            </Link>
-          </li>
+
           <AuthNavigation />
         </ul>
       </nav>
     </header>
   );
 };
+
 export default Header;

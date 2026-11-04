@@ -4,26 +4,30 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import css from "./SignInPage.module.css";
-import { LoginRequest } from "@/types/note";
-import { login, getMe } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
+import { login, getMe, type LoginRequest } from "@/lib/api/clientApi";
 
 const SignIn = () => {
   const router = useRouter();
   const [error, setError] = useState("");
 
   const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
-
   const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (formData: FormData) => {
+    setError("");
+
     try {
-      const formValues = Object.fromEntries(formData) as LoginRequest;
+      const formValues: LoginRequest = {
+        email: String(formData.get("email") ?? "")
+          .trim()
+          .toLowerCase(),
+        password: String(formData.get("password") ?? ""),
+      };
 
       const res = await login(formValues);
 
       if (res) {
-        // 🔥 ключова частина — оновлюємо глобальний стан
         const user = await getMe();
 
         setUser(user);
