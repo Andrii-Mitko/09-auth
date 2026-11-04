@@ -1,8 +1,9 @@
-import { NoteTag } from "@/types/note";
+import type { NoteTag } from "@/types/note";
 import axios from "axios";
 
+// Запити з браузера до власних Next.js API routes
 export const nextServer = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+  baseURL: "/api",
   withCredentials: true,
 });
 
