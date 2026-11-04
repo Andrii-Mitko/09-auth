@@ -23,12 +23,6 @@ const Header = () => {
             </Link>
           </li>
 
-          <li className={css.navigationItem}>
-            <Link className={css.navigationLink} href="/about">
-              About
-            </Link>
-          </li>
-
           <AuthNavigation />
         </ul>
       </nav>
