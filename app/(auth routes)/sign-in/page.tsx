@@ -11,7 +11,6 @@ const SignIn = () => {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
   const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (formData: FormData) => {
@@ -29,10 +28,7 @@ const SignIn = () => {
 
       if (res) {
         const user = await getMe();
-
         setUser(user);
-        setIsAuthenticated(true);
-
         router.push("/profile");
       } else {
         setError("Invalid email or password");

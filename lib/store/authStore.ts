@@ -1,13 +1,11 @@
 import { create } from "zustand";
-import { User } from "@/types/user";
+import type { User } from "@/types/user";
 
 type AuthStore = {
   isAuthenticated: boolean;
   user: User | null;
-
   setIsAuthenticated: (value: boolean) => void;
   setUser: (user: User | null) => void;
-
   clearIsAuthenticated: () => void;
 };
 
@@ -16,7 +14,7 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   user: null,
 
   setIsAuthenticated: (value) => set({ isAuthenticated: value }),
-  setUser: (user) => set({ user }),
-
+  // Встановлення користувача одразу синхронізує стан авторизації
+  setUser: (user) => set({ user, isAuthenticated: Boolean(user) }),
   clearIsAuthenticated: () => set({ isAuthenticated: false, user: null }),
 }));

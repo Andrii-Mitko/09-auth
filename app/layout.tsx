@@ -1,4 +1,4 @@
-import Header from "@/components/Header/Header";
+import Header from "@/components/layout/Header/Header";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import css from "./page.module.css";
 import type { Metadata } from "next";
